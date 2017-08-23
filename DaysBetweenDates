@@ -1,0 +1,79 @@
+<Project to show which days left to other, it's called by Days Between Dates - Project of Udacity - Student of Data Science programming>
+<Some are written in portuguese. I'm working to develope better the code and paste stap by stap here. When finish, i'll translate to english>
+
+<code>
+def isleapyear(year): #Neste caso, testa se o codigo é ano bissesto 
+    if year % 400 == 0:
+    	return True
+    if year % 100 == 0:
+        return False
+    if year % 4 == 0:
+        return True
+    return False
+# test leap years
+
+def daysinmonth(year, month):
+    if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
+        return 31
+    if month == 2:
+        if isleapyear(year):
+            return 29
+        return 28
+    return 30 
+# esta procedure é usado para declarar quantos dias se tem no mês. Retoma a cada dia definido de cada mês e caso o ano seja 
+# bissesto, ele irá retorna os dias correstos desse mês
+    
+def nextDay(year, month, day):
+    if day < daysinmonth(year, month):
+        return year, month, day + 1
+    else:
+        if month == 12:
+            return year + 1, 1, 1
+        else:
+            return year, month + 1, 1
+# teste para saber a contagem do dia seguinte. Ajuda a saber se o código está rodando direito 
+
+def dateIsBefore(year1, month1, day1, year2, month2, day2):
+    """Returns True if year1-month1-day1 is before year2-month2-day2. Otherwise, returns False."""
+    if year1 < year2:
+        return True
+    if year1 == year2:
+        if month1 < month2:
+            return True
+        if month1 == month2:
+            return day1 < day2
+    return False    
+# para ter certeza que as datas vão ser condizentes para a contagem dos dias. Caso a data seja anterior ou tiver alguma coisa 
+# digitada errada, o código ira demonstrar nessa parte
+
+def daysBetweenDates(year1, month1, day1, year2, month2, day2):
+    assert not dateIsBefore(year2, month2, day2, year1, month1, day1) 
+days = 0
+    while dateIsBefore(year1, month1, day1, year2, month2, day2):
+        year1, month1, day1 = nextDay(year1, month1, day1)
+        days += 1
+    return days
+# Assert not é usado para criar uma asserção para gerar uma falha. Ela assuma que a segunda data, não vem antes da primeira data 
+# Assim evita que o código gere um erro em cima das datas colocadas 
+
+# Esta parte de baixo está perfeitamente escrita como está no programa. O modo de ter deixado assim é para estudar melhor a limpeza dos 
+# comandos abaixo, para cada vez implementar melhor o código
+
+def test():
+    test_cases = [((2012,1,1,2012,2,28), 58), 
+                  ((2012,1,1,2012,3,1), 60),
+                  ((2011,6,30,2012,6,30), 366),
+                  ((2011,1,1,2012,8,8), 585 ),
+                  ((1900,1,1,1999,12,31), 36523)]
+    
+    for (args, answer) in test_cases:
+        result = daysBetweenDates(*args)
+        if result != answer:
+            print ("Test with data:", args, "failed")
+        else:
+            print ("Test case passed!")
+
+test()
+
+print(isleapyear(2012))
+print(isleapyear(2013))
